@@ -1,0 +1,9 @@
+# Auto-Reconstructed: syncom_bottle
+newmtl Material_Diffuse
+Ka 1.000 1.000 1.000
+Kd 1.000 1.000 1.000
+Ks 0.150 0.150 0.150
+Ns 25.0
+d 1.0
+illum 2
+map_Kd textures/texture_diffuse.png

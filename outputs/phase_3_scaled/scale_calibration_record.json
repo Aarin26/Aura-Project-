@@ -1,51 +1,11 @@
 {
-  "calibration_date": "2026-10-14T22:48:18.635222",
-  "target_object": "Aura Robotic Sensor Pod (Industrial Calibration Pilot)",
-  "reference_points": {
-    "point_1_id": 1,
-    "point_1_unscaled_xyz": [
-      -0.5,
-      0.24,
-      -0.4
-    ],
-    "point_2_id": 2,
-    "point_2_unscaled_xyz": [
-      0.5,
-      0.24,
-      -0.4
-    ]
-  },
-  "unscaled_distance_sfm_units": 1.0,
-  "ground_truth_distance": 0.25,
-  "units": "meters",
-  "scale_factor": 0.25,
-  "measured_distance_after_scale": 0.25,
-  "scale_error_meters": 0.0,
-  "sanity_check": {
-    "description": "Top panel width between Corner 3 and Corner 4",
-    "point_1_id": 3,
-    "point_2_id": 4,
-    "expected_meters": 0.3,
-    "measured_meters": 0.3,
-    "error_meters": 0.0,
-    "error_percent": 0.0
-  },
-  "bounding_box_meters": {
-    "min_xyz": [
-      -0.15,
-      0.0,
-      -0.1
-    ],
-    "max_xyz": [
-      0.15,
-      0.2,
-      0.1
-    ],
-    "extent_xyz": [
-      0.3,
-      0.2,
-      0.2
-    ]
-  },
-  "output_directory": "C:\\Users\\aarin\\OneDrive\\Desktop\\Vuforia\\Aura-Project-\\outputs\\phase_3_scaled"
+  "dataset": "SynCom Bottle",
+  "scale_factor": 1.0,
+  "calibration_date": "2026-10-15T01:43:56.180955",
+  "ground_truth_height_m": 0.28,
+  "ground_truth_diameter_m": 0.082,
+  "reconstructed_height_m": 0.2800000011920929,
+  "reconstructed_diameter_m": 0.0820000022649765,
+  "height_error_m": 1.19209286886246e-09,
+  "status": "PASSED"
 }

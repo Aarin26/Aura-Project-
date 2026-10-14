@@ -1,9 +1,9 @@
-# Material file for photogrammetry candidate asset
+# SynCom Bottle Material
 newmtl Material_Diffuse
 Ka 1.000 1.000 1.000
 Kd 1.000 1.000 1.000
-Ks 0.100 0.100 0.100
-Ns 20.0
+Ks 0.200 0.200 0.200
+Ns 30.0
 d 1.0
 illum 2
 map_Kd textures/texture_diffuse.png

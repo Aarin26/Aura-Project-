@@ -1,21 +1,11 @@
 {
-  "target_object": "Aura Robotic Sensor Pod (Industrial Calibration Pilot)",
-  "scale_reference_type": "physical_distance",
-  "reference_feature_description": "Distance between optical calibration target Marker A and Marker B on front panel",
-  "ground_truth_distance": 0.25,
+  "object_name": "SynCom Bottle",
+  "ground_truth_distance": 0.28,
   "units": "meters",
-  "reference_point_1_id": 1,
-  "reference_point_2_id": 2,
-  "sanity_check": {
-    "description": "Top panel width between Corner 3 and Corner 4",
-    "point_1_id": 3,
-    "point_2_id": 4,
-    "ground_truth_distance": 0.3
+  "reference_points": {
+    "point_1": "Bottle Base (Center of Bottom Cap)",
+    "point_2": "Bottle Cap (Top Rim Tip)"
   },
-  "measurement_tool": "precision laser-etched optical calibration bar",
-  "estimated_uncertainty_mm": 0.1,
-  "reference_images": [
-    "IMG_0001.JPG",
-    "IMG_0021.JPG"
-  ]
+  "method": "Physical caliper and height gauge measurement",
+  "timestamp": "2026-10-15T01:43:53.082623"
 }
