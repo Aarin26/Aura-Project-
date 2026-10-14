@@ -266,7 +266,7 @@ Multi-view photogrammetry: real-world photos → validated, textured 3D asset �
 | Brief | Details |
 | :--- | :--- |
 | **Goal** | Evaluate geometric and visual quality using photos deliberately excluded from reconstruction, measuring generalization to unseen viewpoints |
-| **Initial status** | ⏳ Not started |
+| **Initial status** | ✅ Completed (Pilot Baseline) |
 | **Depends on** | Phase 5 candidate asset; Phase 0 held-out set |
 | **Exit milestone** | M6 — Validation report records objective comparisons, visual findings, acceptance decisions, and required iterations |
 

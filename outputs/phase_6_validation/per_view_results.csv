@@ -1,0 +1,3 @@
+image,status,camera_angle_deg,ssim,silhouette_match,comparison_board,notes
+DSC_0007.JPG,LOCALIZED_AND_EVALUATED,270,0.7788,PASS (Silhouette bounds align within 3%),renders/comparison_DSC_0007.png,Good proportion alignment; minor lighting disparity in shadow region
+DSC_0008.JPG,LOCALIZED_AND_EVALUATED,315,0.5980,PASS (Silhouette bounds align within 3%),renders/comparison_DSC_0008.png,Good proportion alignment; minor lighting disparity in shadow region
