@@ -299,7 +299,7 @@ Multi-view photogrammetry: real-world photos → validated, textured 3D asset �
 | Brief | Details |
 | :--- | :--- |
 | **Goal** | Package the validated asset in a standard format with textures, real-world dimensions, and coordinate/origin metadata for Unity/Unreal import |
-| **Initial status** | ⏳ Not started |
+| **Initial status** | ✅ Completed (Pilot Baseline) |
 | **Depends on** | Phase 6 accepted validation report |
 | **Exit milestone** | M7 — Asset imports into the target engine at expected size and appearance; handoff package complete |
 

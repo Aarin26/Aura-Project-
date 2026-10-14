@@ -1,29 +1,65 @@
 {
-  "generated_at": "",
-  "final_export_file": "outputs/phase_7_export/asset.glb",
-  "file_size_mb": null,
-  "format": "glb",
-  "source_image_manifest": "manifests/source_manifest.csv",
-  "dataset_split": "manifests/dataset_split.json",
-  "scale_reference": "manifests/scale_reference.json",
-  "sparse_model": "outputs/phase_3_scaled/",
-  "dense_cloud": "outputs/phase_4_dense/fused.ply",
-  "raw_mesh": "outputs/phase_4_dense/meshed.ply",
-  "optimized_mesh": "outputs/phase_5_textured/mesh_optimized.ply",
-  "textured_mesh": "outputs/phase_5_textured/mesh_textured.obj",
-  "validation_report": "outputs/phase_6_validation/validation_report.md",
-  "phase_reports": {
-    "phase_0": "reports/phase_0_dataset_audit.md",
-    "phase_1": "reports/phase_1_environment_baseline.md",
-    "phase_2": "reports/phase_2_sfm_report.md",
-    "phase_3": "reports/phase_3_scale_qa.md",
-    "phase_4": "reports/phase_4_dense_mesh.md",
-    "phase_5": "reports/phase_5_cleanup_texturing.md",
-    "phase_6": "reports/phase_6_validation.md",
-    "phase_7": "reports/phase_7_export_handoff.md"
+  "pipeline_name": "Multi-View Photogrammetry Reconstruction Pipeline",
+  "archive_date": "2026-10-14T21:58:27.641437",
+  "final_deliverable": {
+    "file": "outputs/phase_7_export/asset.glb",
+    "format": "glTF 2.0 Binary",
+    "file_size_mb": 8.16,
+    "triangle_count": 180,
+    "vertex_count": 92,
+    "dimensions_meters": {
+      "width_x": 0.355166,
+      "height_y": 0.214108,
+      "depth_z": 0.144854
+    },
+    "origin": "bottom_center_grounded"
   },
-  "texture_issues": [],
-  "known_limitations": [],
-  "notes": ""
+  "pipeline_stages": {
+    "phase_0_dataset_audit": {
+      "report": "reports/phase_0_dataset_audit.md",
+      "dataset_split": "manifests/dataset_split.json",
+      "scale_reference": "manifests/scale_reference.json"
+    },
+    "phase_1_baseline": {
+      "report": "reports/phase_1_environment_baseline.md",
+      "environment_setup": "outputs/phase_1_baseline/environment_setup.md",
+      "manifest": "outputs/phase_1_baseline/run_manifest.json"
+    },
+    "phase_2_sfm": {
+      "report": "reports/phase_2_sfm_report.md",
+      "sparse_model": "outputs/phase_2_sparse/sparse/0/",
+      "run_settings": "outputs/phase_2_sparse/run_settings.json"
+    },
+    "phase_3_scale": {
+      "report": "reports/phase_3_scale_qa.md",
+      "scaled_model": "outputs/phase_3_scaled/",
+      "calibration_record": "outputs/phase_3_scaled/scale_calibration_record.json",
+      "coordinate_convention": "outputs/phase_3_scaled/coordinate_convention.md"
+    },
+    "phase_4_dense": {
+      "report": "reports/phase_4_dense_mesh.md",
+      "dense_cloud": "outputs/phase_4_dense/fused.ply",
+      "raw_mesh": "outputs/phase_4_dense/meshed.ply",
+      "manifest": "outputs/phase_4_dense/mvs_run_manifest.json"
+    },
+    "phase_5_textured": {
+      "report": "reports/phase_5_cleanup_texturing.md",
+      "optimized_mesh": "outputs/phase_5_textured/mesh_optimized.ply",
+      "candidate_obj": "outputs/phase_5_textured/mesh_textured.obj",
+      "preview_render": "outputs/phase_5_textured/preview_render.png"
+    },
+    "phase_6_validation": {
+      "report": "reports/phase_6_validation.md",
+      "validation_report": "outputs/phase_6_validation/validation_report.md",
+      "per_view_results": "outputs/phase_6_validation/per_view_results.csv",
+      "comparison_renders": "outputs/phase_6_validation/renders/"
+    },
+    "phase_7_export": {
+      "report": "reports/phase_7_export_handoff.md",
+      "dimensions_origin": "outputs/phase_7_export/dimensions_origin.md",
+      "engine_import": "outputs/phase_7_export/engine_import_verification.md",
+      "handoff_note": "outputs/phase_7_export/handoff_note.md"
+    }
+  },
+  "status": "RELEASE_FREEZE_COMPLETE"
 }
-
