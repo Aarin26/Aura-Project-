@@ -96,3 +96,4 @@ This single command automatically:
   - Press `Z` and choose **Material Preview** to view the textured 3D asset in full color.
 - In **Unity / Unreal**:
   - Drag `outputs/phase_7_export/asset.glb` directly into your Project Assets folder.
+

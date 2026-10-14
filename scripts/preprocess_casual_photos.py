@@ -162,9 +162,18 @@ def normalize_image(input_path, output_path, max_dim=2560):
         exif = transposed.getexif()
         exif[0x0112] = 1  # Reset to standard upright orientation
         
-        # Save as JPEG with high quality
+        # Save image (convert RGBA to RGB with white background if saving to JPEG)
         if output_path.suffix.lower() in [".jpg", ".jpeg"]:
-            final_img.save(output_path, quality=95, exif=exif, subsampling=0)
+            if final_img.mode in ("RGBA", "LA", "P"):
+                rgb_bg = Image.new("RGB", final_img.size, (255, 255, 255))
+                if final_img.mode == "P":
+                    final_img = final_img.convert("RGBA")
+                alpha = final_img.split()[3] if len(final_img.split()) == 4 else None
+                rgb_bg.paste(final_img, mask=alpha)
+                save_img = rgb_bg
+            else:
+                save_img = final_img
+            save_img.save(output_path, quality=95, exif=exif, subsampling=0)
         else:
             final_img.save(output_path)
 
