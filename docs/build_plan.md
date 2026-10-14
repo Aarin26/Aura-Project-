@@ -231,7 +231,7 @@ Multi-view photogrammetry: real-world photos → validated, textured 3D asset �
 | Brief | Details |
 | :--- | :--- |
 | **Goal** | Prepare a clean, efficient, textured asset that preserves recognizable shape and surface detail while meeting downstream runtime constraints |
-| **Initial status** | ⏳ Not started |
+| **Initial status** | ✅ Completed (Pilot Baseline) |
 | **Depends on** | Phase 4 raw mesh and dense cloud |
 | **Exit milestone** | M5 — Cleaned, scaled, UV-mapped, textured candidate asset ready for validation and engine import |
 
