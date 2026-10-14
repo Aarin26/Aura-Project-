@@ -1,9 +1,8 @@
-# SynCom Bottle Material
 newmtl Material_Diffuse
-Ka 1.000 1.000 1.000
-Kd 1.000 1.000 1.000
-Ks 0.200 0.200 0.200
-Ns 30.0
-d 1.0
+Ka 1 1 1
+Kd 1 1 1
+Ks 0.1 0.1 0.1
+Ns 20
+d 1
 illum 2
 map_Kd textures/texture_diffuse.png
