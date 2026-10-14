@@ -1,50 +1,50 @@
 {
-  "calibration_date": "2026-10-14T20:54:30.251155",
-  "target_object": "Pilot Object (3D Reconstruction Reference)",
+  "calibration_date": "2026-10-14T22:10:25.028339",
+  "target_object": "Aura Robotic Sensor Pod (Industrial Calibration Pilot)",
   "reference_points": {
     "point_1_id": 1,
     "point_1_unscaled_xyz": [
       -0.5,
-      -0.3,
-      -0.2
+      0.24,
+      -0.4
     ],
     "point_2_id": 2,
     "point_2_unscaled_xyz": [
       0.5,
-      -0.3,
-      -0.2
+      0.24,
+      -0.4
     ]
   },
   "unscaled_distance_sfm_units": 1.0,
-  "ground_truth_distance": 0.35,
+  "ground_truth_distance": 0.25,
   "units": "meters",
-  "scale_factor": 0.35,
-  "measured_distance_after_scale": 0.35,
+  "scale_factor": 0.25,
+  "measured_distance_after_scale": 0.25,
   "scale_error_meters": 0.0,
   "sanity_check": {
-    "description": "Width between Corner C (Point 3) and Corner D (Point 4)",
+    "description": "Top panel width between Corner 3 and Corner 4",
     "point_1_id": 3,
     "point_2_id": 4,
-    "expected_meters": 0.35,
-    "measured_meters": 0.35,
+    "expected_meters": 0.3,
+    "measured_meters": 0.3,
     "error_meters": 0.0,
     "error_percent": 0.0
   },
   "bounding_box_meters": {
     "min_xyz": [
-      -0.175,
-      -0.105,
-      -0.07
+      -0.15,
+      0.0,
+      -0.1
     ],
     "max_xyz": [
-      0.175,
-      0.105,
-      0.07
+      0.15,
+      0.2,
+      0.1
     ],
     "extent_xyz": [
-      0.35,
-      0.21,
-      0.14
+      0.3,
+      0.2,
+      0.2
     ]
   },
   "output_directory": "C:\\Users\\aarin\\OneDrive\\Desktop\\Vuforia\\Aura-Project-\\outputs\\phase_3_scaled"

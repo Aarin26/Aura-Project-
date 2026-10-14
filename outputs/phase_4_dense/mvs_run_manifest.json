@@ -10,32 +10,32 @@
     "hole_filling": "conservative_closed_only (no synthetic hallucination)",
     "unit_system": "meters"
   },
-  "start_time": "2026-10-14T21:19:08.881094",
-  "end_time": "2026-10-14T21:19:08.939777",
+  "start_time": "2026-10-14T22:10:28.536784",
+  "end_time": "2026-10-14T22:10:28.562276",
   "outputs": {
     "dense_cloud": "C:\\Users\\aarin\\OneDrive\\Desktop\\Vuforia\\Aura-Project-\\outputs\\phase_4_dense\\fused.ply",
-    "dense_point_count": 3547,
-    "dense_cloud_file_kb": 217,
+    "dense_point_count": 3430,
+    "dense_cloud_file_kb": 210,
     "raw_mesh": "C:\\Users\\aarin\\OneDrive\\Desktop\\Vuforia\\Aura-Project-\\outputs\\phase_4_dense\\meshed.ply",
-    "mesh_vertex_count": 109,
-    "mesh_triangle_count": 214,
-    "mesh_file_kb": 9
+    "mesh_vertex_count": 58,
+    "mesh_triangle_count": 112,
+    "mesh_file_kb": 5
   },
   "bounding_box_meters": {
     "min_xyz": [
       -0.1779506951570511,
       -0.1065039411187172,
-      -0.07226642221212387
+      -0.10000000149011612
     ],
     "max_xyz": [
       0.17721469700336456,
-      0.10755448788404465,
-      0.07259447127580643
+      0.20000000298023224,
+      0.10000000149011612
     ],
     "extent_xyz": [
       0.35516539216041565,
-      0.21405842900276184,
-      0.1448608934879303
+      0.30650394409894943,
+      0.20000000298023224
     ]
   },
   "scale_drift_check": {

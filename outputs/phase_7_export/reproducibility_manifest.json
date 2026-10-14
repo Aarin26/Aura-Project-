@@ -1,16 +1,16 @@
 {
   "pipeline_name": "Multi-View Photogrammetry Reconstruction Pipeline",
-  "archive_date": "2026-10-14T21:58:27.641437",
+  "archive_date": "2026-10-14T22:10:38.451695",
   "final_deliverable": {
     "file": "outputs/phase_7_export/asset.glb",
     "format": "glTF 2.0 Binary",
-    "file_size_mb": 8.16,
-    "triangle_count": 180,
-    "vertex_count": 92,
+    "file_size_mb": 8.15,
+    "triangle_count": 112,
+    "vertex_count": 58,
     "dimensions_meters": {
       "width_x": 0.355166,
-      "height_y": 0.214108,
-      "depth_z": 0.144854
+      "height_y": 0.306504,
+      "depth_z": 0.2
     },
     "origin": "bottom_center_grounded"
   },

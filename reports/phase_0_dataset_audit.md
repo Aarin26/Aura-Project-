@@ -1,45 +1,38 @@
-# Phase 0: Dataset Audit and Ground Truth
+# Phase 0: Dataset Audit Report
 
-| Metric / Requirement | Status | Details |
-| :--- | :--- | :--- |
-| **Phase Goal** | In Progress | Audit visual overlap, image quality, camera metadata, scale ground truth, and establish held-out split. |
-| **Raw Master Preserved** | Ready for intake | `data/00_raw_master/` directory created. |
-| **Source Image Manifest** | Pending intake | Manifest generator script ready at `scripts/audit_dataset.py`. |
-| **Scale Reference Record** | Pending measurement | Template created at `manifests/scale_reference.json`. |
-| **Held-out Split** | Pending dataset intake | Specification template created at `manifests/dataset_split.json`. |
+- **Total source images identified**: 24
+- **Source path**: `C:\Users\aarin\OneDrive\Desktop\Vuforia\Aura-Project-\data\00_raw_master`
 
----
+## Inventory Summary
 
-## Phase 0 Checklist
+- **Camera Models Detected**: ILCE-7M3
+- **Total Disk Footprint**: 13.12 MB
 
-### Task 0.1: Inventory & Preservation
-- [ ] Place all captured source photographs into `data/00_raw_master/` (treat this folder as read-only).
-- [ ] Run `python scripts/audit_dataset.py` to generate `manifests/source_manifest.csv` with SHA-256 hashes, file dimensions, and camera metadata.
-- [ ] Check for mixed cameras, variable focal lengths, or stripped EXIF data.
+### Image List
 
-### Task 0.2: Coverage & Image Quality Audit
-- [ ] Verify that every key surface appears with $\ge$ 60–80% overlap across at least 3 distinct images.
-- [ ] Verify multi-height 360° coverage (eye-level/mid, top-down/high, low angles where applicable, plus detail close-ups).
-- [ ] Check that subject fills approximately 50–80% of the frame without clipping boundaries.
-- [ ] Flag and exclude blurry shots, motion blur, severe lens flare, or large lighting variations.
-- [ ] Note risks for transparent, reflective, or textureless surfaces.
-
-### Task 0.3: Scale Ground Truth Calibration
-- [ ] Measure a known physical reference distance in the scene (e.g. ruler, caliper measurement of known feature).
-- [ ] Record ground truth distance, units (e.g. meters), and reference photo IDs in `manifests/scale_reference.json`.
-
-### Task 0.4: Freeze Held-Out Validation Images
-- [ ] Select 10–15% of clear viewpoints distributed around the object to reserve as held-out validation images.
-- [ ] Copy or move held-out images to `data/02_held_out/`.
-- [ ] Copy the remaining reconstruction set to `data/01_reconstruction/`.
-- [ ] Record the image assignments in `manifests/dataset_split.json`.
-
----
-
-## Exit Gate (M0)
-Phase 0 is complete when:
-1. `data/00_raw_master/` is checksummed in `manifests/source_manifest.csv`.
-2. Coverage limitations and quality checks are signed off.
-3. Known scale distance is recorded with uncertainty in `manifests/scale_reference.json`.
-4. Held-out validation images are frozen in `data/02_held_out/` and will not be seen during SfM/meshing.
-
+| Filename | Dimensions | Camera | Size (KB) | SHA-256 (first 8) |
+| :--- | :--- | :--- | :--- | :--- |
+| IMG_0001.JPG | 1920x1080 | SONY ILCE-7M3 | 556 | c1820926... |
+| IMG_0002.JPG | 1920x1080 | SONY ILCE-7M3 | 559 | 776157f4... |
+| IMG_0003.JPG | 1920x1080 | SONY ILCE-7M3 | 558 | d0c72399... |
+| IMG_0004.JPG | 1920x1080 | SONY ILCE-7M3 | 556 | abb65f98... |
+| IMG_0005.JPG | 1920x1080 | SONY ILCE-7M3 | 561 | a4a21d50... |
+| IMG_0006.JPG | 1920x1080 | SONY ILCE-7M3 | 561 | f9088994... |
+| IMG_0007.JPG | 1920x1080 | SONY ILCE-7M3 | 558 | 785d804e... |
+| IMG_0008.JPG | 1920x1080 | SONY ILCE-7M3 | 562 | 34e3bba2... |
+| IMG_0009.JPG | 1920x1080 | SONY ILCE-7M3 | 561 | 512098fc... |
+| IMG_0010.JPG | 1920x1080 | SONY ILCE-7M3 | 556 | 68f9582c... |
+| IMG_0011.JPG | 1920x1080 | SONY ILCE-7M3 | 558 | 3f482623... |
+| IMG_0012.JPG | 1920x1080 | SONY ILCE-7M3 | 558 | d2ea9b43... |
+| IMG_0013.JPG | 1920x1080 | SONY ILCE-7M3 | 557 | 910a28bb... |
+| IMG_0014.JPG | 1920x1080 | SONY ILCE-7M3 | 562 | 7e627ee6... |
+| IMG_0015.JPG | 1920x1080 | SONY ILCE-7M3 | 557 | 3f783058... |
+| IMG_0016.JPG | 1920x1080 | SONY ILCE-7M3 | 565 | 3a82256c... |
+| IMG_0017.JPG | 1920x1080 | SONY ILCE-7M3 | 559 | 7c912d96... |
+| IMG_0018.JPG | 1920x1080 | SONY ILCE-7M3 | 565 | 6601f808... |
+| IMG_0019.JPG | 1920x1080 | SONY ILCE-7M3 | 557 | 6fa974ce... |
+| IMG_0020.JPG | 1920x1080 | SONY ILCE-7M3 | 562 | 1c40f477... |
+| IMG_0021.JPG | 1920x1080 | SONY ILCE-7M3 | 558 | 9138e58c... |
+| IMG_0022.JPG | 1920x1080 | SONY ILCE-7M3 | 558 | b8ec72e1... |
+| IMG_0023.JPG | 1920x1080 | SONY ILCE-7M3 | 561 | 39afdb93... |
+| IMG_0024.JPG | 1920x1080 | SONY ILCE-7M3 | 559 | 48c331a3... |

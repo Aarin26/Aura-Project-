@@ -14,7 +14,7 @@
 | Specification | Value |
 | :--- | :--- |
 | **File Format** | glTF 2.0 Binary (.glb) |
-| **File Size** | 8.16 MB |
+| **File Size** | 8.15 MB |
 | **Polygon Count** | 180 Triangles |
 | **Vertex Count** | 92 Vertices |
 | **UV Channels** | 1 (Non-overlapping atlas) |

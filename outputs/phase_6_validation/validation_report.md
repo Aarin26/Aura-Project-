@@ -1,24 +1,26 @@
 # Phase 6: Held-Out Validation Report
 
-- **Validation Date:** 2026-10-14T21:53:04.700327
+- **Validation Date:** 2026-10-14T22:10:35.509269
 - **Evaluated Candidate Asset:** `mesh_textured.obj`
-- **Held-Out Test Images:** 2 unseen photographs
-- **Mean SSIM Across Unseen Views:** **0.6884**
+- **Held-Out Test Images:** 4 unseen photographs
+- **Mean SSIM Across Unseen Views:** **0.4389**
 
 ## 1. Per-View Visual and Similarity Evaluation
 
 | Image | Camera Angle | Status | SSIM | Silhouette Alignment | Comparison Artifact |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| DSC_0007.JPG | 270° | LOCALIZED_AND_EVALUATED | **0.7788** | PASS (Silhouette bounds align within 3%) | [comparison_DSC_0007.png](renders/comparison_DSC_0007.png) |
-| DSC_0008.JPG | 315° | LOCALIZED_AND_EVALUATED | **0.5980** | PASS (Silhouette bounds align within 3%) | [comparison_DSC_0008.png](renders/comparison_DSC_0008.png) |
+| IMG_0004.JPG | 270° | LOCALIZED_AND_EVALUATED | **0.4855** | PASS (Silhouette bounds align within 3%) | [comparison_IMG_0004.png](renders/comparison_IMG_0004.png) |
+| IMG_0009.JPG | 270° | LOCALIZED_AND_EVALUATED | **0.4066** | PASS (Silhouette bounds align within 3%) | [comparison_IMG_0009.png](renders/comparison_IMG_0009.png) |
+| IMG_0015.JPG | 270° | LOCALIZED_AND_EVALUATED | **0.4339** | PASS (Silhouette bounds align within 3%) | [comparison_IMG_0015.png](renders/comparison_IMG_0015.png) |
+| IMG_0019.JPG | 270° | LOCALIZED_AND_EVALUATED | **0.4297** | PASS (Silhouette bounds align within 3%) | [comparison_IMG_0019.png](renders/comparison_IMG_0019.png) |
 
 ## 2. Geometric Ground-Truth Tolerance Check
 
 | Dimension | Ground Truth (m) | Measured in Model (m) | Error (m) | Error (%) | Tolerance Status |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| Reference Baseline (Width X) | 0.3500 m | 0.3552 m | 0.0052 m | 1.48% | PASS (< 2.0%) |
-| Object Height (Y) | 0.2100 m | 0.2141 m | 0.0041 m | 1.96% | PASS (< 2.0%) |
-| Object Depth (Z) | 0.1400 m | 0.1449 m | 0.0049 m | 3.47% | REVIEW |
+| Reference Baseline (Width X) | 0.2500 m | 0.3552 m | 0.1052 m | 42.07% | REVIEW |
+| Object Height (Y) | 0.2100 m | 0.3065 m | 0.0965 m | 45.95% | REVIEW |
+| Object Depth (Z) | 0.1400 m | 0.2000 m | 0.0600 m | 42.86% | REVIEW |
 
 ## 3. Defect Traceability Matrix
 

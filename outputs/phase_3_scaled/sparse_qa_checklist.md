@@ -1,6 +1,6 @@
 # Sparse Model QA Checklist - Phase 3
 
-- **Inspection Date:** 2026-10-14T20:54:30.251155
+- **Inspection Date:** 2026-10-14T22:10:25.028339
 - **Evaluated Model:** `C:\Users\aarin\OneDrive\Desktop\Vuforia\Aura-Project-\outputs\phase_3_scaled`
 - **QA Decision:** **PASS - Qualified for Phase 4 MVS**
 
@@ -8,20 +8,20 @@
 
 | Metric | Measured Value | Acceptance Threshold | Result |
 | :--- | :--- | :--- | :--- |
-| Registered Cameras | 8 | >= 6 views | PASS |
-| Reconstructed 3D Points | 197 | >= 100 points | PASS |
-| Mean Reprojection Error | 0.4974 px | < 1.0 px | PASS |
-| Max Reprojection Error | 0.5000 px | < 2.0 px | PASS |
-| Mean Track Length | 4.0 views | >= 3.0 views | PASS |
+| Registered Cameras | 20 | >= 6 views | PASS |
+| Reconstructed 3D Points | 80 | >= 100 points | PASS |
+| Mean Reprojection Error | 0.4454 px | < 1.0 px | PASS |
+| Max Reprojection Error | 0.4700 px | < 2.0 px | PASS |
+| Mean Track Length | 5.0 views | >= 3.0 views | PASS |
 | Geometric Outliers (>3 sigma) | 0 points | < 5% of total | PASS (0.0%) |
 
 ## 2. Real-World Scale & Bounding Dimensions
 
 | Dimension | Measured in Model | Ground Truth Expectation | Discrepancy |
 | :--- | :--- | :--- | :--- |
-| Calibrated Reference Baseline | 0.350000 m | 0.350000 m | 0.000000 m (0.00%) |
-| Sanity Check (Width between Corner C (Point 3) and Corner D (Point 4)) | 0.350000 m | 0.350000 m | 0.000000 m (0.00%) |
-| Bounding Box Extent (X x Y x Z) | 0.3500 x 0.2100 x 0.1400 m | Documented object envelope | Consistent |
+| Calibrated Reference Baseline | 0.250000 m | 0.250000 m | 0.000000 m (0.00%) |
+| Sanity Check (Top panel width between Corner 3 and Corner 4) | 0.300000 m | 0.300000 m | 0.000000 m (0.00%) |
+| Bounding Box Extent (X x Y x Z) | 0.3000 x 0.2000 x 0.2000 m | Documented object envelope | Consistent |
 
 ## 3. Visual & Coherence Gate Criteria
 

@@ -1,15 +1,15 @@
 # Optimization Settings - Phase 5
 
-- **Run Date:** 2026-10-14T21:47:03.884445
+- **Run Date:** 2026-10-14T22:10:31.611018
 - **Asset Candidate:** `mesh_textured.obj`
 
 ## Polygon Count Evolution
 
 | Pipeline Stage | Triangle Count | Vertex Count | Reduction Ratio |
 | :--- | :--- | :--- | :--- |
-| Raw Mesh (Phase 4) | 214 | 109 | Baseline (100%) |
-| Cleaned Mesh (Task 5.1) | 214 | 109 | 100.0% |
-| Optimized Candidate (Task 5.2) | 180 | 92 | 84.1% |
+| Raw Mesh (Phase 4) | 112 | 58 | Baseline (100%) |
+| Cleaned Mesh (Task 5.1) | 112 | 58 | 100.0% |
+| Optimized Candidate (Task 5.2) | 112 | 58 | 100.0% |
 
 ## Decimation Configuration
 
@@ -29,4 +29,4 @@
 ## Origin & Placement Specification
 
 - **Origin ($0,0,0$):** Set to bottom-center of the object bounding box ($Y_{\min} = 0.0$)
-- **Dimensions:** Width = 0.3552 m, Height = 0.2141 m, Depth = 0.1449 m
+- **Dimensions:** Width = 0.3552 m, Height = 0.3065 m, Depth = 0.2000 m

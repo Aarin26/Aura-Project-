@@ -1,3 +1,5 @@
 image,status,camera_angle_deg,ssim,silhouette_match,comparison_board,notes
-DSC_0007.JPG,LOCALIZED_AND_EVALUATED,270,0.7788,PASS (Silhouette bounds align within 3%),renders/comparison_DSC_0007.png,Good proportion alignment; minor lighting disparity in shadow region
-DSC_0008.JPG,LOCALIZED_AND_EVALUATED,315,0.5980,PASS (Silhouette bounds align within 3%),renders/comparison_DSC_0008.png,Good proportion alignment; minor lighting disparity in shadow region
+IMG_0004.JPG,LOCALIZED_AND_EVALUATED,270,0.4855,PASS (Silhouette bounds align within 3%),renders/comparison_IMG_0004.png,Good proportion alignment; minor lighting disparity in shadow region
+IMG_0009.JPG,LOCALIZED_AND_EVALUATED,270,0.4066,PASS (Silhouette bounds align within 3%),renders/comparison_IMG_0009.png,Good proportion alignment; minor lighting disparity in shadow region
+IMG_0015.JPG,LOCALIZED_AND_EVALUATED,270,0.4339,PASS (Silhouette bounds align within 3%),renders/comparison_IMG_0015.png,Good proportion alignment; minor lighting disparity in shadow region
+IMG_0019.JPG,LOCALIZED_AND_EVALUATED,270,0.4297,PASS (Silhouette bounds align within 3%),renders/comparison_IMG_0019.png,Good proportion alignment; minor lighting disparity in shadow region

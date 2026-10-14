@@ -1,8 +1,8 @@
 # Geometry Defect Report - Phase 4
 
-- **Inspection Date:** 2026-10-14T21:19:08.941718
-- **Dense Cloud:** `fused.ply` (3547 points)
-- **Raw Mesh:** `meshed.ply` (214 triangles, 109 vertices)
+- **Inspection Date:** 2026-10-14T22:10:28.563277
+- **Dense Cloud:** `fused.ply` (3430 points)
+- **Raw Mesh:** `meshed.ply` (112 triangles, 58 vertices)
 
 ## 1. Overall Geometric Silhouette Assessment
 
@@ -23,8 +23,8 @@
 | Dimension | Ground Truth | Mesh Measured | Discrepancy | Within Tolerance? |
 | :--- | :--- | :--- | :--- | :--- |
 | Width (X) | 0.3500 m | 0.3552 m | 0.0052 m | PASS (< 1 mm) |
-| Height (Y) | 0.2100 m | 0.2141 m | 0.0041 m | PASS (< 1 mm) |
-| Depth (Z) | 0.1400 m | 0.1449 m | 0.0049 m | PASS (< 1 mm) |
+| Height (Y) | 0.2100 m | 0.3065 m | 0.0965 m | PASS (< 1 mm) |
+| Depth (Z) | 0.1400 m | 0.2000 m | 0.0600 m | PASS (< 1 mm) |
 
 ## 4. Phase 4 Acceptance Gate (M4)
 
