@@ -1,0 +1,3 @@
+# Place undistorted/preprocessed images here if using OpenCV or COLMAP image_undistorter.
+# Only populate this folder if you are explicitly adding a preprocessing step — it is optional.
+

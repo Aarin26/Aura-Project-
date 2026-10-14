@@ -1,0 +1,13 @@
+{
+  "phase": "6",
+  "candidate_mesh": "outputs/phase_5_textured/mesh_textured.obj",
+  "sparse_dir": "outputs/phase_3_scaled/",
+  "held_out_dir": "data/02_held_out/",
+  "dataset_split": "manifests/dataset_split.json",
+  "renders_output_dir": "outputs/phase_6_validation/renders/",
+  "localized_poses_dir": "outputs/phase_6_validation/localized_poses/",
+  "colmap_db": "outputs/phase_2_sparse/colmap.db",
+  "metrics": ["SSIM", "silhouette_comparison", "dimension_check"],
+  "notes": ""
+}
+

@@ -1,0 +1,26 @@
+{
+  "run_id": "sfm_001",
+  "phase": "2",
+  "tool": "COLMAP",
+  "tool_version": "",
+  "image_dir": "data/01_reconstruction/",
+  "output_dir": "outputs/phase_2_sparse/",
+  "camera_model": "RADIAL",
+  "single_camera": false,
+  "start_time": "",
+  "end_time": "",
+  "steps": {
+    "feature_extraction": {"exit_code": null},
+    "exhaustive_matching": {"exit_code": null},
+    "mapper": {"exit_code": null},
+    "model_conversion": {"exit_code": null}
+  },
+  "registration_stats": {
+    "registered_cameras": 0,
+    "sparse_points": 0,
+    "mean_reprojection_error": "N/A"
+  },
+  "warnings": [],
+  "notes": ""
+}
+

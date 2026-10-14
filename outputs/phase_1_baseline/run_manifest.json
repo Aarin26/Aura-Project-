@@ -1,0 +1,36 @@
+{
+  "run_id": "baseline_001",
+  "phase": "1",
+  "tool": "Meshroom",
+  "tool_version": "",
+  "input_manifest": "manifests/dataset_split.json",
+  "reconstruction_image_dir": "data/01_reconstruction/",
+  "config": {
+    "pipeline": "default",
+    "notes": "Unmodified default Meshroom pipeline for first baseline run"
+  },
+  "start_time": "",
+  "end_time": "",
+  "warnings": [],
+  "output_paths": {
+    "meshroom_project": "",
+    "camera_poses": "",
+    "sparse_cloud": "",
+    "dense_cloud": "",
+    "mesh": "",
+    "texture": ""
+  },
+  "registration_summary": {
+    "total_input_images": 0,
+    "cameras_registered": 0,
+    "cameras_failed": 0
+  },
+  "resource_usage": {
+    "peak_ram_gb": null,
+    "peak_vram_gb": null,
+    "total_runtime_minutes": null,
+    "disk_output_mb": null
+  },
+  "notes": ""
+}
+

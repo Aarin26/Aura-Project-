@@ -1,0 +1,51 @@
+{
+  "calibration_date": "2026-10-14T20:54:30.251155",
+  "target_object": "Pilot Object (3D Reconstruction Reference)",
+  "reference_points": {
+    "point_1_id": 1,
+    "point_1_unscaled_xyz": [
+      -0.5,
+      -0.3,
+      -0.2
+    ],
+    "point_2_id": 2,
+    "point_2_unscaled_xyz": [
+      0.5,
+      -0.3,
+      -0.2
+    ]
+  },
+  "unscaled_distance_sfm_units": 1.0,
+  "ground_truth_distance": 0.35,
+  "units": "meters",
+  "scale_factor": 0.35,
+  "measured_distance_after_scale": 0.35,
+  "scale_error_meters": 0.0,
+  "sanity_check": {
+    "description": "Width between Corner C (Point 3) and Corner D (Point 4)",
+    "point_1_id": 3,
+    "point_2_id": 4,
+    "expected_meters": 0.35,
+    "measured_meters": 0.35,
+    "error_meters": 0.0,
+    "error_percent": 0.0
+  },
+  "bounding_box_meters": {
+    "min_xyz": [
+      -0.175,
+      -0.105,
+      -0.07
+    ],
+    "max_xyz": [
+      0.175,
+      0.105,
+      0.07
+    ],
+    "extent_xyz": [
+      0.35,
+      0.21,
+      0.14
+    ]
+  },
+  "output_directory": "C:\\Users\\aarin\\OneDrive\\Desktop\\Vuforia\\Aura-Project-\\outputs\\phase_3_scaled"
+}

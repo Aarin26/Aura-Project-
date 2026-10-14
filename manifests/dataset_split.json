@@ -1,0 +1,10 @@
+{
+  "total_images": 0,
+  "reconstruction_count": 0,
+  "held_out_count": 0,
+  "excluded_count": 0,
+  "reconstruction_images": [],
+  "held_out_images": [],
+  "excluded_images": []
+}
+

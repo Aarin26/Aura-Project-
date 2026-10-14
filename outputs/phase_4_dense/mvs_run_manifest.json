@@ -1,0 +1,51 @@
+{
+  "run_id": "mvs_pilot_001",
+  "phase": "4",
+  "tool": "OpenMVS / Delaunay Surface Reconstruction",
+  "input_sparse_dir": "C:\\Users\\aarin\\OneDrive\\Desktop\\Vuforia\\Aura-Project-\\outputs\\phase_3_scaled",
+  "settings": {
+    "density_sampling": "multi_view_patch_fusion",
+    "normal_computation": "surface_gradient_oriented",
+    "meshing_algorithm": "delaunay_surface_reconstruction",
+    "hole_filling": "conservative_closed_only (no synthetic hallucination)",
+    "unit_system": "meters"
+  },
+  "start_time": "2026-10-14T21:19:08.881094",
+  "end_time": "2026-10-14T21:19:08.939777",
+  "outputs": {
+    "dense_cloud": "C:\\Users\\aarin\\OneDrive\\Desktop\\Vuforia\\Aura-Project-\\outputs\\phase_4_dense\\fused.ply",
+    "dense_point_count": 3547,
+    "dense_cloud_file_kb": 217,
+    "raw_mesh": "C:\\Users\\aarin\\OneDrive\\Desktop\\Vuforia\\Aura-Project-\\outputs\\phase_4_dense\\meshed.ply",
+    "mesh_vertex_count": 109,
+    "mesh_triangle_count": 214,
+    "mesh_file_kb": 9
+  },
+  "bounding_box_meters": {
+    "min_xyz": [
+      -0.1779506951570511,
+      -0.1065039411187172,
+      -0.07226642221212387
+    ],
+    "max_xyz": [
+      0.17721469700336456,
+      0.10755448788404465,
+      0.07259447127580643
+    ],
+    "extent_xyz": [
+      0.35516539216041565,
+      0.21405842900276184,
+      0.1448608934879303
+    ]
+  },
+  "scale_drift_check": {
+    "expected_width_m": 0.35,
+    "measured_width_m": 0.35516539216041565,
+    "drift_percentage": 1.4758263315473348
+  },
+  "known_limitations": [
+    "Underside/base unobserved in 360 capture pass (intentional open boundary)",
+    "Fine edge beveling below 1mm smoothed at raw dense sampling resolution"
+  ],
+  "notes": "Raw outputs preserved untouched; Phase 5 decimation and cleanup will operate on a separate copy."
+}

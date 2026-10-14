@@ -1,0 +1,21 @@
+{
+  "target_object": "Pilot Object (3D Reconstruction Reference)",
+  "scale_reference_type": "physical_distance",
+  "reference_feature_description": "Distance between reference endpoints Marker A (Point 1) and Marker B (Point 2)",
+  "ground_truth_distance": 0.350,
+  "units": "meters",
+  "reference_point_1_id": 1,
+  "reference_point_2_id": 2,
+  "sanity_check": {
+    "description": "Width between Corner C (Point 3) and Corner D (Point 4)",
+    "point_1_id": 3,
+    "point_2_id": 4,
+    "ground_truth_distance": 0.350
+  },
+  "measurement_tool": "precision digital caliper / calibration ruler",
+  "estimated_uncertainty_mm": 0.2,
+  "reference_images": [
+    "DSC_0001.JPG",
+    "DSC_0002.JPG"
+  ]
+}

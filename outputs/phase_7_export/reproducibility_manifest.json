@@ -1,0 +1,29 @@
+{
+  "generated_at": "",
+  "final_export_file": "outputs/phase_7_export/asset.glb",
+  "file_size_mb": null,
+  "format": "glb",
+  "source_image_manifest": "manifests/source_manifest.csv",
+  "dataset_split": "manifests/dataset_split.json",
+  "scale_reference": "manifests/scale_reference.json",
+  "sparse_model": "outputs/phase_3_scaled/",
+  "dense_cloud": "outputs/phase_4_dense/fused.ply",
+  "raw_mesh": "outputs/phase_4_dense/meshed.ply",
+  "optimized_mesh": "outputs/phase_5_textured/mesh_optimized.ply",
+  "textured_mesh": "outputs/phase_5_textured/mesh_textured.obj",
+  "validation_report": "outputs/phase_6_validation/validation_report.md",
+  "phase_reports": {
+    "phase_0": "reports/phase_0_dataset_audit.md",
+    "phase_1": "reports/phase_1_environment_baseline.md",
+    "phase_2": "reports/phase_2_sfm_report.md",
+    "phase_3": "reports/phase_3_scale_qa.md",
+    "phase_4": "reports/phase_4_dense_mesh.md",
+    "phase_5": "reports/phase_5_cleanup_texturing.md",
+    "phase_6": "reports/phase_6_validation.md",
+    "phase_7": "reports/phase_7_export_handoff.md"
+  },
+  "texture_issues": [],
+  "known_limitations": [],
+  "notes": ""
+}
+
