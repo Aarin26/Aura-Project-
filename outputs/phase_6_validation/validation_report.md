@@ -1,18 +1,18 @@
 # Phase 6: Held-Out Validation Report
 
-- **Validation Date:** 2026-10-14T22:10:35.509269
+- **Validation Date:** 2026-10-14T22:48:29.713474
 - **Evaluated Candidate Asset:** `mesh_textured.obj`
 - **Held-Out Test Images:** 4 unseen photographs
-- **Mean SSIM Across Unseen Views:** **0.4389**
+- **Mean SSIM Across Unseen Views:** **0.4331**
 
 ## 1. Per-View Visual and Similarity Evaluation
 
 | Image | Camera Angle | Status | SSIM | Silhouette Alignment | Comparison Artifact |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | IMG_0004.JPG | 270° | LOCALIZED_AND_EVALUATED | **0.4855** | PASS (Silhouette bounds align within 3%) | [comparison_IMG_0004.png](renders/comparison_IMG_0004.png) |
-| IMG_0009.JPG | 270° | LOCALIZED_AND_EVALUATED | **0.4066** | PASS (Silhouette bounds align within 3%) | [comparison_IMG_0009.png](renders/comparison_IMG_0009.png) |
-| IMG_0015.JPG | 270° | LOCALIZED_AND_EVALUATED | **0.4339** | PASS (Silhouette bounds align within 3%) | [comparison_IMG_0015.png](renders/comparison_IMG_0015.png) |
-| IMG_0019.JPG | 270° | LOCALIZED_AND_EVALUATED | **0.4297** | PASS (Silhouette bounds align within 3%) | [comparison_IMG_0019.png](renders/comparison_IMG_0019.png) |
+| IMG_0010.JPG | 270° | LOCALIZED_AND_EVALUATED | **0.4735** | PASS (Silhouette bounds align within 3%) | [comparison_IMG_0010.png](renders/comparison_IMG_0010.png) |
+| IMG_0016.JPG | 270° | LOCALIZED_AND_EVALUATED | **0.4256** | PASS (Silhouette bounds align within 3%) | [comparison_IMG_0016.png](renders/comparison_IMG_0016.png) |
+| IMG_0022.JPG | 270° | LOCALIZED_AND_EVALUATED | **0.3478** | PASS (Silhouette bounds align within 3%) | [comparison_IMG_0022.png](renders/comparison_IMG_0022.png) |
 
 ## 2. Geometric Ground-Truth Tolerance Check
 

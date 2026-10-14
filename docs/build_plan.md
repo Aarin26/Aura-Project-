@@ -134,8 +134,15 @@ Multi-view photogrammetry: real-world photos → validated, textured 3D asset �
 | **Exit milestone** | M2 — Most usable images register into one coherent sparse model; camera poses and bundle-adjustment results saved |
 
 ### Tasks
-- **Task 2.1** — Load images and inspect EXIF metadata (focal length, camera model). Apply the chosen tool's lens-distortion handling. If images come from different cameras/lenses, ensure the tool does not force one shared intrinsic model.
-- **Task 2.2** — Run feature detection and cross-image matching (SIFT is a suitable offline choice). Inspect the image-match graph for disconnected clusters or false matches. If matching fails, investigate image quality, overlap, and camera grouping first.
+- **Task 2.1** — **Casual Smartphone Normalization Engine (`scripts/preprocess_casual_photos.py`)**:
+  - **Auto-Orientation:** Reads EXIF orientation tags (Tag 274) and applies lossless pixel transposition (`PIL.ImageOps.exif_transpose`) so rotated, portrait, landscape, or upside-down mobile photos are physically upright.
+  - **Sharpness / Motion Blur Rejection:** Computes 2D discrete Laplacian variance $\mathrm{Var}(\nabla^2 I)$ for every image. Blurry images falling below threshold (< 50.0) are automatically flagged or isolated into `data/03_preprocessed/excluded_blurry/` to prevent corrupted SfM tracks.
+  - **OOM Prevention & Rescaling:** Downscales oversized mobile images (12MP, 48MP, 108MP) to safe dimensions (max 2560px) using high-fidelity Lanczos resampling.
+  - **Multi-Camera & Multi-Lens Detection:** Identifies distinct focal lengths and sensor profiles (e.g. ultra-wide 13mm vs wide 26mm vs telephoto 77mm).
+  - **Automated Dataset Partitioning:** Splits clean images into reconstruction (85%) and held-out validation (15%) subsets with uniform angular distribution.
+- **Task 2.2** — **Robust Feature Detection & Guided Matching**:
+  - Uses `SIMPLE_RADIAL` camera model for stable mobile lens distortion self-calibration.
+  - Deploys `--SiftMatching.guided_matching 1` and `--SiftExtraction.max_num_features 8192` to filter out cluttered background matches and maximize inlier matches across wide baselines.
 - **Task 2.3** — Build the initial reconstruction from a strong overlapping image pair, then incrementally register additional images. Run bundle adjustment. Save the sparse cloud, camera intrinsics/extrinsics, registered-image list, reprojection-error statistics, and logs.
 - **Task 2.4** — Identify images that did not register; determine whether each is redundant, low quality, or critical for a missing surface. If a failed image is the only view of an important region, revisit Phase 0 or rerun with documented settings.
 
@@ -144,12 +151,14 @@ Multi-view photogrammetry: real-world photos → validated, textured 3D asset �
 - [ ] Registered-image list and unregistered-image list reviewed and explained
 - [ ] Camera poses and sparse geometry saved and re-openable
 - [ ] Reprojection-error and registration summaries retained for comparison between runs
+- [ ] Raw smartphone photos successfully normalized (upright orientation, blur filtered, safe resolution)
 
 ### Deliverables
+- `data/03_preprocessed/` — Normalized upright master images
+- `reports/phase_2_preprocessing_report.md` — Preprocessing audit & sharpness table
 - `outputs/phase_2_sparse/` — Sparse reconstruction
-- Camera model and pose data
-- Registration/matching report
-- Documented run settings
+- `outputs/phase_2_sparse/registration_report.md` — Registration/matching report
+- `outputs/phase_2_sparse/run_settings.json` — Documented run settings
 
 ### Risks
 | Risk | Handling |

@@ -236,7 +236,7 @@ def main():
             "notes": "Good proportion alignment; minor lighting disparity in shadow region"
         }
         results.append(res_entry)
-        print(f"[OK] View {img_name} (Angle {angle}°): SSIM = {score:.4f} -> Saved {comp_path.name}")
+        print(f"[OK] View {img_name} (Angle {angle} deg): SSIM = {score:.4f} -> Saved {comp_path.name}")
 
     avg_ssim = sum(ssim_scores) / len(ssim_scores) if ssim_scores else 0.0
 

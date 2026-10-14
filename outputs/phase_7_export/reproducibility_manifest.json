@@ -1,6 +1,6 @@
 {
   "pipeline_name": "Multi-View Photogrammetry Reconstruction Pipeline",
-  "archive_date": "2026-10-14T22:10:38.451695",
+  "archive_date": "2026-10-14T22:48:32.621779",
   "final_deliverable": {
     "file": "outputs/phase_7_export/asset.glb",
     "format": "glTF 2.0 Binary",

@@ -10,8 +10,8 @@
     "hole_filling": "conservative_closed_only (no synthetic hallucination)",
     "unit_system": "meters"
   },
-  "start_time": "2026-10-14T22:10:28.536784",
-  "end_time": "2026-10-14T22:10:28.562276",
+  "start_time": "2026-10-14T22:48:22.431599",
+  "end_time": "2026-10-14T22:48:22.469771",
   "outputs": {
     "dense_cloud": "C:\\Users\\aarin\\OneDrive\\Desktop\\Vuforia\\Aura-Project-\\outputs\\phase_4_dense\\fused.ply",
     "dense_point_count": 3430,
