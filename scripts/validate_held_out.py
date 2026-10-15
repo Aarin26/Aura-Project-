@@ -1,311 +1,180 @@
 #!/usr/bin/env python3
-"""
-Phase 6 - validate_held_out.py
-Validates the candidate textured asset against photos deliberately excluded
-from reconstruction (held-out validation images).
+"""Compare held-out bottle silhouettes using the dataset's recorded cameras.
 
-Tasks:
-  1. Estimate camera poses for held-out photos from multi-view trajectory.
-  2. Synthetically render the candidate mesh from each held-out camera viewpoint.
-  3. Compute SSIM (Structural Similarity Index) and Silhouette IoU metrics.
-  4. Generate side-by-side comparison images (Real Photo vs Synthetic Render vs Difference Map).
-  5. Check metric physical dimensions against ground truth.
-  6. Output per_view_results.csv and comprehensive validation_report.md.
+This intentionally reports silhouette-envelope IoU only. It does not claim a
+photometric/SSIM score because a faithful material renderer is not part of this
+pipeline.
 """
 
 import argparse
 import csv
 import json
-import math
 import sys
 from datetime import datetime
 from pathlib import Path
+
 import numpy as np
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw
+from scipy.spatial import ConvexHull, QhullError
 
 try:
     import trimesh
-    TRIMESH_AVAILABLE = True
 except ImportError:
-    TRIMESH_AVAILABLE = False
     print("[ERROR] trimesh is required.")
     sys.exit(1)
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-DEFAULT_MESH = BASE_DIR / "outputs" / "phase_5_textured" / "mesh_textured.obj"
-DEFAULT_SPARSE = BASE_DIR / "outputs" / "phase_3_scaled"
+DEFAULT_MESH = BASE_DIR / "outputs" / "phase_7_export" / "asset.obj"
 DEFAULT_HELD_OUT = BASE_DIR / "data" / "02_held_out"
+DEFAULT_CAMERAS = BASE_DIR / "data" / "syncom_bottle" / "cameras.json"
 DEFAULT_OUTPUT = BASE_DIR / "outputs" / "phase_6_validation"
 DEFAULT_SPLIT = BASE_DIR / "manifests" / "dataset_split.json"
 DEFAULT_SCALE = BASE_DIR / "manifests" / "scale_reference.json"
+DEFAULT_ALIGNMENT = BASE_DIR / "outputs" / "phase_7_export" / "camera_alignment.json"
 
 
-def compute_ssim(img1, img2):
-    """
-    Computes Structural Similarity Index (SSIM) between two grayscale numpy arrays.
-    """
-    i1 = img1.astype(np.float64)
-    i2 = img2.astype(np.float64)
-
-    c1 = (0.01 * 255) ** 2
-    c2 = (0.03 * 255) ** 2
-
-    mu1 = np.mean(i1)
-    mu2 = np.mean(i2)
-    sigma1_sq = np.var(i1)
-    sigma2_sq = np.var(i2)
-    sigma12 = np.mean((i1 - mu1) * (i2 - mu2))
-
-    num = (2 * mu1 * mu2 + c1) * (2 * sigma12 + c2)
-    den = (mu1 ** 2 + mu2 ** 2 + c1) * (sigma1_sq + sigma2_sq + c2)
-    return float(num / den)
+def load_mask(path):
+    image = Image.open(path)
+    if "A" in image.getbands():
+        return np.asarray(image.getchannel("A")) > 20
+    rgb = np.asarray(image.convert("RGB"))
+    # The benchmark images have a textured background. Use its alpha whenever
+    # available; RGB-only images need a border-color distance estimate.
+    border = np.concatenate([rgb[0], rgb[-1], rgb[:, 0], rgb[:, -1]])
+    bg = np.median(border, axis=0)
+    return np.linalg.norm(rgb.astype(float) - bg, axis=2) > 18.0
 
 
-def render_mesh_view(mesh, view_angle_deg, width=1024, height=768):
-    """
-    Renders a synthetic perspective view of the candidate mesh matching the camera angle.
-    """
-    img = Image.new("RGB", (width, height), color=(220, 225, 230))
-    draw = ImageDraw.Draw(img)
+def render_silhouette_envelope(mesh, camera, width, height, alignment):
+    """Project the mesh into a dataset camera and rasterize its 2D convex hull."""
+    # The reconstruction export maps source Z-up to engine Y-up: (x,y,z)->(x,z,-y).
+    scale = float(alignment["scale_factor"])
+    source_z_min = float(alignment["source_z_min"])
+    v = np.asarray(mesh.vertices, dtype=np.float64)
+    source = np.column_stack([v[:, 0] / scale, -v[:, 2] / scale, v[:, 1] / scale + source_z_min])
 
-    # Ground plane
-    draw.polygon([(50, 650), (974, 650), (850, 420), (174, 420)], fill=(190, 195, 200))
+    c2w = np.asarray(camera["extr"], dtype=np.float64).reshape(4, 4)
+    gl_to_cv = np.diag([1.0, -1.0, -1.0, 1.0])
+    w2c = np.linalg.inv(c2w @ gl_to_cv)
+    cam = (w2c @ np.column_stack([source, np.ones(len(source))]).T).T[:, :3]
+    fx, fy, cx, cy = camera["intr"]
+    visible = cam[:, 2] > 1e-5
+    xy = np.empty((np.count_nonzero(visible), 2), dtype=np.float64)
+    xyz = cam[visible]
+    xy[:, 0] = fx * xyz[:, 0] / xyz[:, 2] + cx
+    xy[:, 1] = fy * xyz[:, 1] / xyz[:, 2] + cy
+    xy = xy[np.isfinite(xy).all(axis=1)]
 
-    verts = mesh.vertices.copy()
-    faces = mesh.faces
-
-    # Center vertices
-    min_xyz = np.min(verts, axis=0)
-    max_xyz = np.max(verts, axis=0)
-    centroid = (min_xyz + max_xyz) / 2.0
-    verts -= centroid
-
-    # Rotate around Y axis according to viewpoint
-    rad = np.radians(view_angle_deg)
-    rot_y = np.array([
-        [np.cos(rad), 0, np.sin(rad)],
-        [0, 1, 0],
-        [-np.sin(rad), 0, np.cos(rad)]
-    ])
-    rot_verts = verts @ rot_y.T
-
-    # Project to 2D screen coordinates
-    focal = 1200.0
-    cam_dist = 1.3
-    screen_pts = []
-    for v in rot_verts:
-        z = v[2] + cam_dist
-        sx = width / 2.0 + (v[0] / z) * focal
-        sy = height / 2.0 - (v[1] / z) * focal + 40
-        screen_pts.append((sx, sy))
-
-    # Sort faces by depth (painter's algorithm)
-    face_depths = [np.mean(rot_verts[f, 2]) for f in faces]
-    sorted_face_indices = np.argsort(face_depths)[::-1]
-
-    # Draw shaded faces
-    for fi in sorted_face_indices:
-        f = faces[fi]
-        poly = [screen_pts[f[0]], screen_pts[f[1]], screen_pts[f[2]]]
-        # Simple lighting based on normal Z
-        norm = mesh.face_normals[fi] @ rot_y.T
-        light_dot = max(0.2, -norm[2] * 0.7 + norm[1] * 0.3)
-        base_color = np.array([180, 190, 205])
-        shaded = np.clip(base_color * light_dot * 1.2, 0, 255).astype(int)
-        draw.polygon(poly, fill=tuple(shaded), outline=(100, 110, 125))
-
-    return img
+    mask = Image.new("L", (width, height), 0)
+    if len(xy) < 3:
+        return np.asarray(mask) > 0
+    try:
+        hull = ConvexHull(xy)
+    except QhullError:
+        return np.asarray(mask) > 0
+    polygon = [(float(x), float(y)) for x, y in xy[hull.vertices]]
+    ImageDraw.Draw(mask).polygon(polygon, fill=255)
+    return np.asarray(mask) > 0
 
 
-def create_comparison_board(real_img, render_img, img_name, ssim_score, output_path):
-    """
-    Creates a 3-panel comparison image: Real Photo | Synthetic Render | Difference Heatmap
-    """
-    w, h = real_img.size
-    comp = Image.new("RGB", (w * 3, h + 70), color=(30, 32, 36))
-    draw = ImageDraw.Draw(comp)
-
-    # Header
-    title = f"Phase 6 Validation View: {img_name} | SSIM: {ssim_score:.4f} | Status: LOCALIZED & MATCHED"
-    draw.text((30, 20), title, fill=(240, 240, 240))
-
-    # Paste Real Photo
-    comp.paste(real_img, (0, 70))
-    draw.text((20, 85), "[REAL PHOTOGRAPH - UNSEEN VIEW]", fill=(240, 220, 80))
-
-    # Paste Synthetic Render
-    comp.paste(render_img, (w, 70))
-    draw.text((w + 20, 85), "[CANDIDATE MESH SYNTHETIC RENDER]", fill=(80, 220, 240))
-
-    # Difference Heatmap
-    arr_real = np.array(real_img.convert("L"), dtype=np.float32)
-    arr_rend = np.array(render_img.convert("L"), dtype=np.float32)
-    diff = np.abs(arr_real - arr_rend)
-
-    # Colorize diff: black=no error, red=discrepancy
-    diff_rgb = np.zeros((h, w, 3), dtype=np.uint8)
-    diff_rgb[:, :, 0] = np.clip(diff * 3.0, 0, 255).astype(np.uint8) # Red channel for error
-    diff_rgb[:, :, 1] = np.clip(255 - diff * 2.0, 0, 100).astype(np.uint8)
-    diff_rgb[:, :, 2] = 50
-    diff_img = Image.fromarray(diff_rgb)
-
-    comp.paste(diff_img, (w * 2, 70))
-    draw.text((w * 2 + 20, 85), "[ERROR / DIFFERENCE MAP]", fill=(255, 100, 100))
-
+def comparison_board(real_image, real_mask, predicted, image_name, iou, output_path):
+    real = real_image.convert("RGB")
+    pred = Image.fromarray((predicted * 255).astype(np.uint8)).convert("RGB")
+    mismatch = np.logical_xor(real_mask, predicted)
+    overlay = np.zeros((*mismatch.shape, 3), dtype=np.uint8)
+    overlay[real_mask & predicted] = [40, 180, 80]
+    overlay[real_mask & ~predicted] = [240, 50, 50]
+    overlay[~real_mask & predicted] = [40, 120, 255]
+    diff = Image.fromarray(overlay, "RGB")
+    w, h = real.size
+    board = Image.new("RGB", (w * 3, h + 55), (30, 32, 36))
+    draw = ImageDraw.Draw(board)
+    draw.text((15, 15), f"{image_name} | silhouette-envelope IoU {iou:.4f}", fill="white")
+    board.paste(real, (0, 55))
+    board.paste(pred, (w, 55))
+    board.paste(diff, (2 * w, 55))
+    draw.text((12, 38), "Held-out image", fill="white")
+    draw.text((w + 12, 38), "Camera-matched projected hull", fill="white")
+    draw.text((2 * w + 12, 38), "Green overlap / red miss / blue extra", fill="white")
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    comp.save(output_path, "PNG")
+    board.save(output_path)
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Phase 6 Held-Out Validation")
+    parser = argparse.ArgumentParser(description="Held-out silhouette validation using supplied camera poses")
     parser.add_argument("--mesh", default=str(DEFAULT_MESH))
-    parser.add_argument("--sparse_dir", default=str(DEFAULT_SPARSE))
     parser.add_argument("--held_out_dir", default=str(DEFAULT_HELD_OUT))
+    parser.add_argument("--camera_file", default=str(DEFAULT_CAMERAS))
     parser.add_argument("--output_dir", default=str(DEFAULT_OUTPUT))
     parser.add_argument("--dataset_split", default=str(DEFAULT_SPLIT))
     parser.add_argument("--scale_reference", default=str(DEFAULT_SCALE))
+    parser.add_argument("--alignment_file", default=str(DEFAULT_ALIGNMENT))
     args = parser.parse_args()
 
-    output_dir = Path(args.output_dir)
-    renders_dir = output_dir / "renders"
-    renders_dir.mkdir(parents=True, exist_ok=True)
-
-    print("\n" + "=" * 60)
-    print("  Phase 6 - Validation Against Held-Out Photos")
-    print("=" * 60)
-
-    # 1. Load Candidate Mesh
     mesh_path = Path(args.mesh)
     if not mesh_path.exists():
-        print(f"[FAIL] Candidate mesh not found: {mesh_path}")
-        sys.exit(1)
-    mesh = trimesh.load(mesh_path, process=False)
-    print(f"Loaded candidate asset: {mesh_path.name}")
-    print(f"  Vertices: {len(mesh.vertices)} | Triangles: {len(mesh.faces)}")
+        raise FileNotFoundError(f"Candidate mesh not found: {mesh_path}")
+    loaded = trimesh.load(mesh_path, process=False)
+    if isinstance(loaded, trimesh.Scene):
+        mesh = trimesh.util.concatenate(tuple(g for g in loaded.geometry.values() if isinstance(g, trimesh.Trimesh)))
+    else:
+        mesh = loaded
 
-    # 2. Load Held-Out Split
-    with open(args.dataset_split, encoding="utf-8") as f:
-        split = json.load(f)
-    held_out_list = split.get("held_out_images", [])
-    held_out_dir = Path(args.held_out_dir)
+    split = json.loads(Path(args.dataset_split).read_text(encoding="utf-8"))
+    cameras = json.loads(Path(args.camera_file).read_text(encoding="utf-8"))["cameras"]
+    scale_ref = json.loads(Path(args.scale_reference).read_text(encoding="utf-8"))
+    target_height = float(scale_ref["ground_truth_distance"])
+    alignment_path = Path(args.alignment_file)
+    if not alignment_path.exists():
+        raise FileNotFoundError(f"Reconstruction alignment metadata is required: {alignment_path}")
+    alignment = json.loads(alignment_path.read_text(encoding="utf-8"))
+    if abs(float(alignment["target_height_m"]) - target_height) > 1e-6:
+        raise ValueError("The candidate mesh alignment metadata and scale reference do not match")
+    held_out = split["held_out_images"]
+    held_dir = Path(args.held_out_dir)
+    output_dir = Path(args.output_dir)
+    renders_dir = output_dir / "renders"
+    rows = []
 
-    print(f"Held-out test images ({len(held_out_list)}): {', '.join(held_out_list)}")
+    for filename in held_out:
+        image_path = held_dir / filename
+        if not image_path.exists():
+            raise FileNotFoundError(f"Held-out image is missing: {image_path}")
+        key = Path(filename).stem
+        if key not in cameras:
+            raise KeyError(f"No recorded camera pose for held-out image {filename}")
+        image = Image.open(image_path)
+        real_mask = load_mask(image_path)
+        predicted = render_silhouette_envelope(mesh, cameras[key], image.width, image.height, alignment)
+        union = np.count_nonzero(real_mask | predicted)
+        iou = float(np.count_nonzero(real_mask & predicted) / union) if union else 1.0
+        board = renders_dir / f"comparison_{key}.png"
+        comparison_board(image, real_mask, predicted, filename, iou, board)
+        rows.append({
+            "image": filename,
+            "silhouette_envelope_iou": f"{iou:.5f}",
+            "status": "EVALUATED",
+            "comparison_board": f"renders/{board.name}",
+        })
+        print(f"{filename}: silhouette-envelope IoU={iou:.4f}")
 
-    # 3. Per-View Viewpoint Matching and SSIM Comparison
-    view_angles = {
-        "DSC_0007.JPG": 270, # 270 deg orbit viewpoint
-        "DSC_0008.JPG": 315  # 315 deg orbit viewpoint
-    }
-
-    results = []
-    ssim_scores = []
-
-    for img_name in held_out_list:
-        img_path = held_out_dir / img_name
-        if not img_path.exists():
-            print(f"[WARN] Held-out image file {img_name} not found.")
-            results.append({
-                "image": img_name, "status": "FILE_NOT_FOUND",
-                "ssim": "N/A", "silhouette_match": "N/A", "notes": "Missing file"
-            })
-            continue
-
-        real_img = Image.open(img_path).convert("RGB")
-        angle = view_angles.get(img_name, 270)
-
-        # Render synthetic view from matching camera pose
-        rendered_view = render_mesh_view(mesh, angle, width=real_img.width, height=real_img.height)
-
-        # Compute SSIM
-        g_real = np.array(real_img.convert("L"))
-        g_rend = np.array(rendered_view.convert("L"))
-        score = compute_ssim(g_real, g_rend)
-        ssim_scores.append(score)
-
-        # Save visual comparison board
-        comp_path = renders_dir / f"comparison_{Path(img_name).stem}.png"
-        create_comparison_board(real_img, rendered_view, img_name, score, comp_path)
-
-        res_entry = {
-            "image": img_name,
-            "status": "LOCALIZED_AND_EVALUATED",
-            "camera_angle_deg": angle,
-            "ssim": f"{score:.4f}",
-            "silhouette_match": "PASS (Silhouette bounds align within 3%)",
-            "comparison_board": f"renders/{comp_path.name}",
-            "notes": "Good proportion alignment; minor lighting disparity in shadow region"
-        }
-        results.append(res_entry)
-        print(f"[OK] View {img_name} (Angle {angle} deg): SSIM = {score:.4f} -> Saved {comp_path.name}")
-
-    avg_ssim = sum(ssim_scores) / len(ssim_scores) if ssim_scores else 0.0
-
-    # 4. Check Metric Dimensions Against Ground Truth (Task 6.3)
-    with open(args.scale_reference, encoding="utf-8") as f:
-        scale_ref = json.load(f)
-
-    gt_dist = scale_ref.get("ground_truth_distance", 0.350)
-    mesh_min = np.min(mesh.vertices, axis=0)
-    mesh_max = np.max(mesh.vertices, axis=0)
-    mesh_ext = mesh_max - mesh_min
-
-    dim_checks = [
-        {"dimension": "Reference Baseline (Width X)", "ground_truth_m": gt_dist, "measured_m": float(mesh_ext[0])},
-        {"dimension": "Object Height (Y)", "ground_truth_m": 0.210, "measured_m": float(mesh_ext[1])},
-        {"dimension": "Object Depth (Z)", "ground_truth_m": 0.140, "measured_m": float(mesh_ext[2])}
-    ]
-
-    for d in dim_checks:
-        d["error_m"] = abs(d["measured_m"] - d["ground_truth_m"])
-        d["error_percent"] = (d["error_m"] / d["ground_truth_m"]) * 100.0
-        d["within_tolerance"] = "PASS (< 2.0%)" if d["error_percent"] < 2.0 else "REVIEW"
-
-    # 5. Write CSV Results
-    csv_path = output_dir / "per_view_results.csv"
-    with open(csv_path, "w", newline="", encoding="utf-8") as f:
-        fieldnames = ["image", "status", "camera_angle_deg", "ssim", "silhouette_match", "comparison_board", "notes"]
-        writer = csv.DictWriter(f, fieldnames=fieldnames)
+    mean_iou = float(np.mean([float(r["silhouette_envelope_iou"]) for r in rows])) if rows else 0.0
+    output_dir.mkdir(parents=True, exist_ok=True)
+    with (output_dir / "per_view_results.csv").open("w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=["image", "silhouette_envelope_iou", "status", "comparison_board"])
         writer.writeheader()
-        writer.writerows(results)
-    print(f"[OK] Per-view results CSV saved: {csv_path.name}")
-
-    # 6. Write Comprehensive Markdown Validation Report
-    report_path = output_dir / "validation_report.md"
-    with open(report_path, "w", encoding="utf-8") as f:
-        f.write("# Phase 6: Held-Out Validation Report\n\n")
-        f.write(f"- **Validation Date:** {datetime.now().isoformat()}\n")
-        f.write(f"- **Evaluated Candidate Asset:** `{mesh_path.name}`\n")
-        f.write(f"- **Held-Out Test Images:** {len(held_out_list)} unseen photographs\n")
-        f.write(f"- **Mean SSIM Across Unseen Views:** **{avg_ssim:.4f}**\n\n")
-
-        f.write("## 1. Per-View Visual and Similarity Evaluation\n\n")
-        f.write("| Image | Camera Angle | Status | SSIM | Silhouette Alignment | Comparison Artifact |\n")
-        f.write("| :--- | :--- | :--- | :--- | :--- | :--- |\n")
-        for r in results:
-            f.write(f"| {r['image']} | {r['camera_angle_deg']}° | {r['status']} | **{r['ssim']}** | {r['silhouette_match']} | [{Path(r['comparison_board']).name}]({r['comparison_board']}) |\n")
-
-        f.write("\n## 2. Geometric Ground-Truth Tolerance Check\n\n")
-        f.write("| Dimension | Ground Truth (m) | Measured in Model (m) | Error (m) | Error (%) | Tolerance Status |\n")
-        f.write("| :--- | :--- | :--- | :--- | :--- | :--- |\n")
-        for d in dim_checks:
-            f.write(f"| {d['dimension']} | {d['ground_truth_m']:.4f} m | {d['measured_m']:.4f} m | {d['error_m']:.4f} m | {d['error_percent']:.2f}% | {d['within_tolerance']} |\n")
-
-        f.write("\n## 3. Defect Traceability Matrix\n\n")
-        f.write("| Observation | Classification | Earliest Traceable Stage | Mitigation / Decision |\n")
-        f.write("| :--- | :--- | :--- | :--- |\n")
-        f.write("| Minor SSIM variance at table border | Background illumination | Phase 0 (lighting uniformity) | Acceptable; background is clipped during engine import. |\n")
-        f.write("| Underside base boundary open | Capture occlusion | Phase 0 (capture coverage) | Documented in Phase 5 defect list; asset grounded at Y=0. |\n")
-        f.write("| Zero scale drift on primary features | Geometry fidelity | Phase 3 (scale calibration) | Calibrated scale factor validated on unseen views. |\n\n")
-
-        f.write("## 4. Acceptance Gate (M6) Sign-Off\n\n")
-        f.write("- [x] **Unseen Views Evaluated:** 100% of held-out test photographs localized and compared.\n")
-        f.write("- [x] **Visual Evidence Preserved:** Rendered-vs-real comparison boards saved in `outputs/phase_6_validation/renders/`.\n")
-        f.write("- [x] **Metric Tolerance Met:** Geometric dimensions match ground truth within $< 1.6\%$ error.\n")
-        f.write("- [x] **Objective vs Subjective:** SSIM similarity metrics and visual inspection findings distinguished.\n")
-        f.write(f"- [x] **Final QA Decision:** **PASS (Quality Confirmed for Phase 7 Engine Handoff)**\n")
-
-    print(f"[OK] Validation report saved: {report_path.name}")
-    print(f"\nMean SSIM: {avg_ssim:.4f} (Threshold > 0.80) -> PASSED")
+        writer.writerows(rows)
+    with (output_dir / "validation_report.md").open("w", encoding="utf-8") as f:
+        f.write("# Held-Out Validation Report\n\n")
+        f.write(f"- Validation date: {datetime.now().isoformat()}\n")
+        f.write(f"- Candidate: `{mesh_path}` ({len(mesh.vertices):,} vertices, {len(mesh.faces):,} triangles)\n")
+        f.write(f"- Held-out views evaluated with supplied camera intrinsics/extrinsics: {len(rows)}\n")
+        f.write(f"- Mean silhouette-envelope IoU: **{mean_iou:.4f}**\n\n")
+        f.write("The predicted mask is the 2D convex hull of projected mesh vertices. This measures overall silhouette coverage only; it does not score color, concavities, occlusion detail, or unseen surfaces. No SSIM or appearance pass is claimed.\n\n")
+        f.write("| Image | Silhouette-envelope IoU | Comparison |\n|---|---:|---|\n")
+        for row in rows:
+            f.write(f"| {row['image']} | {row['silhouette_envelope_iou']} | [{Path(row['comparison_board']).name}]({row['comparison_board']}) |\n")
+    print(f"Mean silhouette-envelope IoU: {mean_iou:.4f}")
 
 
 if __name__ == "__main__":

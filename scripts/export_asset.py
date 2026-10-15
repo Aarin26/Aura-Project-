@@ -30,18 +30,17 @@ except ImportError:
     sys.exit(1)
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-DEFAULT_INPUT_OBJ = BASE_DIR / "outputs" / "phase_5_textured" / "mesh_textured.obj"
-DEFAULT_OUTPUT_DIR = BASE_DIR / "outputs" / "phase_7_export"
+DEFAULT_INPUT_OBJ = BASE_DIR / "outputs" / "syncom_bottle" / "asset.obj"
 
 
 def main():
     parser = argparse.ArgumentParser(description="Phase 7 - Asset Export and Engine Handoff")
     parser.add_argument("--input_obj", default=str(DEFAULT_INPUT_OBJ))
-    parser.add_argument("--output_dir", default=str(DEFAULT_OUTPUT_DIR))
+    parser.add_argument("--output_dir", default=None, help="Defaults to the input asset's own output folder")
     args = parser.parse_args()
 
     input_obj_path = Path(args.input_obj)
-    output_dir = Path(args.output_dir)
+    output_dir = Path(args.output_dir) if args.output_dir else input_obj_path.parent
     output_dir.mkdir(parents=True, exist_ok=True)
     textures_dir = output_dir / "textures"
     textures_dir.mkdir(parents=True, exist_ok=True)
@@ -67,15 +66,19 @@ def main():
     print(f"  Ground Plane Origin: Y_min = {bounds[0][1]:.4f}m (Grounded)")
 
     # 2. Copy Texture Maps to Export Package
-    src_texture = BASE_DIR / "outputs" / "phase_5_textured" / "textures" / "texture_diffuse.png"
+    # Resolve the material map beside the OBJ being packaged; never substitute
+    # a texture from a different pipeline run or output folder.
+    src_texture = input_obj_path.parent / "textures" / "texture_diffuse.png"
     dst_texture = textures_dir / "texture_diffuse.png"
-    if src_texture.exists():
+    if src_texture.exists() and src_texture.resolve() != dst_texture.resolve():
         shutil.copy2(src_texture, dst_texture)
         print(f"[OK] Packaged diffuse texture map: {dst_texture.name} ({dst_texture.stat().st_size // 1024} KB)")
 
-    # 3. Export glTF 2.0 Binary (asset.glb)
+    # 3. Preserve the reconstruction's multi-material GLB when packaging its
+    # own OBJ. Re-exporting the OBJ here would flatten its lid/base materials.
     export_glb_path = output_dir / "asset.glb"
-    mesh.export(export_glb_path)
+    if not export_glb_path.exists() or export_glb_path.parent.resolve() != input_obj_path.parent.resolve():
+        mesh.export(export_glb_path)
     glb_size_mb = export_glb_path.stat().st_size / (1024 * 1024)
     print(f"[OK] Exported binary glTF 2.0: {export_glb_path.name} ({glb_size_mb:.2f} MB, self-contained)")
 
@@ -110,9 +113,9 @@ def main():
         f.write("## 1. Verified Metric Real-World Dimensions\n\n")
         f.write("| Dimension Axis | Size (Meters) | Size (Centimeters) | Ground Truth Target |\n")
         f.write("| :--- | :--- | :--- | :--- |\n")
-        f.write(f"| **X (Width)** | **{extents[0]:.4f} m** | {extents[0]*100:.1f} cm | 0.3500 m (35.0 cm) |\n")
-        f.write(f"| **Y (Height)** | **{extents[1]:.4f} m** | {extents[1]*100:.1f} cm | 0.2100 m (21.0 cm) |\n")
-        f.write(f"| **Z (Depth)** | **{extents[2]:.4f} m** | {extents[2]*100:.1f} cm | 0.1400 m (14.0 cm) |\n\n")
+        f.write(f"| **X (Width)** | **{extents[0]:.4f} m** | {extents[0]*100:.1f} cm | Measured from exported mesh |\n")
+        f.write(f"| **Y (Height)** | **{extents[1]:.4f} m** | {extents[1]*100:.1f} cm | Measured from exported mesh |\n")
+        f.write(f"| **Z (Depth)** | **{extents[2]:.4f} m** | {extents[2]*100:.1f} cm | Measured from exported mesh |\n\n")
         f.write("## 2. Origin & Pivot Point Convention\n\n")
         f.write("- **Origin Coordinate (0, 0, 0):** Positioned at the **bottom-center** of the object's bounding envelope.\n")
         f.write(f"- **Bounding Box Minimum:** `[{bounds[0][0]:.4f}, {bounds[0][1]:.4f}, {bounds[0][2]:.4f}]` m\n")
@@ -149,11 +152,10 @@ def main():
         f.write("4. Verify static mesh collision envelope and visual material fidelity.\n\n")
         f.write("## Quality Inspection Checklist\n\n")
         f.write("- [x] Asset opens without missing geometry, shader errors, or pink texture fallbacks.\n")
-        f.write("- [x] Metric scale matches real-world dimensions (35.5 cm x 21.4 cm x 14.5 cm).\n")
-        f.write("- [x] Pivot point rests at bottom-center ($Y=0$).\n")
-        f.write("- [x] Face normals oriented outward; zero z-fighting or inverted geometry.\n")
-        f.write("- [x] Total polygon budget: **180 triangles** (Mobile / AR / PC real-time ready).\n")
-        f.write("- **Sign-Off:** **PASS - Qualified for Game Engine Deployment**\n")
+        f.write(f"- Measured dimensions: {extents[0]*100:.1f} cm x {extents[1]*100:.1f} cm x {extents[2]*100:.1f} cm.\n")
+        f.write(f"- Measured polygon count: {num_faces} triangles; review against the target platform budget.\n")
+        f.write(f"- Grounding check: Y_min = {bounds[0][1]:.6f} m.\n")
+        f.write("- Import completed by Trimesh reload; inspect material appearance and normals in the target engine.\n")
 
     # 7. Write Handoff Note (Task 7.4)
     handoff_path = output_dir / "handoff_note.md"
@@ -171,11 +173,11 @@ def main():
         f.write("| Specification | Value |\n| :--- | :--- |\n")
         f.write(f"| **File Format** | glTF 2.0 Binary (.glb) |\n")
         f.write(f"| **File Size** | {glb_size_mb:.2f} MB |\n")
-        f.write(f"| **Polygon Count** | 180 Triangles |\n")
-        f.write(f"| **Vertex Count** | 92 Vertices |\n")
+        f.write(f"| **Polygon Count** | {num_faces} Triangles |\n")
+        f.write(f"| **Vertex Count** | {num_verts} Vertices |\n")
         f.write(f"| **UV Channels** | 1 (Non-overlapping atlas) |\n")
         f.write(f"| **Texture Maps** | 2048 x 2048 sRGB Diffuse |\n")
-        f.write(f"| **Metric Scale** | 1.0 = 1 Meter (35.5cm x 21.4cm x 14.5cm) |\n")
+        f.write(f"| **Metric Scale** | 1.0 = 1 Meter ({extents[0]*100:.1f}cm x {extents[1]*100:.1f}cm x {extents[2]*100:.1f}cm) |\n")
         f.write(f"| **Origin** | Bottom-Center (Grounded at Y=0) |\n\n")
         f.write("## Known Capture & Asset Limitations\n\n")
         f.write("1. **Underside Base**: The object's base was rested on a turntable during photogrammetry capture and is intentionally untextured/open. Asset is designed to be placed grounded on flat surfaces.\n")

@@ -1,0 +1,8 @@
+{
+  "source_up_axis": "Z",
+  "export_up_axis": "Y",
+  "source_z_min": -1.3223784388563011,
+  "scale_factor": 0.1173650214294898,
+  "target_height_m": 0.28,
+  "transform_note": "export=(source_x, source_z-source_z_min, -source_y)*scale_factor"
+}

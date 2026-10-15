@@ -1,5 +1,7 @@
 # Geometry Defect Report - Phase 4
 
+> **Superseded for the current deliverable.** This report describes the older Phase 4 pipeline output. The current export is rebuilt directly by `scripts/reconstruct_syncom_bottle.py`; use `outputs/phase_7_export/reconstruction_report.md` for its measured dimensions and mesh counts.
+
 - **Inspection Date:** 2026-10-14T22:48:22.471770
 - **Dense Cloud:** `fused.ply` (3430 points)
 - **Raw Mesh:** `meshed.ply` (112 triangles, 58 vertices)

@@ -1,5 +1,7 @@
 # Optimization Settings - Phase 5
 
+> **Superseded for the current deliverable.** The current reconstruction uses a 128³ visual-hull grid and is not the 112-triangle Phase 5 mesh described below. See `outputs/phase_7_export/reconstruction_report.md` for current measured counts.
+
 - **Run Date:** 2026-10-14T22:48:25.641564
 - **Asset Candidate:** `mesh_textured.obj`
 

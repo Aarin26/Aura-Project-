@@ -1,23 +1,25 @@
-# Phase 6: Validation Report — SynCom Bottle
+# Held-Out Validation Report
 
-- **Total Held-Out Views:** 14
-- **Mean SSIM Score:** 0.8554
-- **Acceptance Threshold:** > 0.80
-- **Final Gate Decision:** **ACCEPTED**
+- Validation date: 2026-10-15T03:13:07.949602
+- Candidate: `C:\Users\aarin\OneDrive\Desktop\Vuforia\Aura-Project-\outputs\phase_7_export\asset.obj` (50,907 vertices, 102,148 triangles)
+- Held-out views evaluated with supplied camera intrinsics/extrinsics: 14
+- Mean silhouette-envelope IoU: **0.9133**
 
-| View | SSIM Score | Status |
-| :--- | :--- | :--- |
-| `0003.png` | 0.8403 | PASSED |
-| `0010.png` | 0.8699 | PASSED |
-| `0017.png` | 0.8333 | PASSED |
-| `0024.png` | 0.8579 | PASSED |
-| `0031.png` | 0.8853 | PASSED |
-| `0038.png` | 0.8797 | PASSED |
-| `0045.png` | 0.8279 | PASSED |
-| `0052.png` | 0.8451 | PASSED |
-| `0059.png` | 0.8274 | PASSED |
-| `0066.png` | 0.883 | PASSED |
-| `0073.png` | 0.8465 | PASSED |
-| `0080.png` | 0.8565 | PASSED |
-| `0087.png` | 0.873 | PASSED |
-| `0094.png` | 0.8495 | PASSED |
+The predicted mask is the 2D convex hull of projected mesh vertices. This measures overall silhouette coverage only; it does not score color, concavities, occlusion detail, or unseen surfaces. No SSIM or appearance pass is claimed.
+
+| Image | Silhouette-envelope IoU | Comparison |
+|---|---:|---|
+| 0003.png | 0.95381 | [comparison_0003.png](renders/comparison_0003.png) |
+| 0010.png | 0.93717 | [comparison_0010.png](renders/comparison_0010.png) |
+| 0017.png | 0.96427 | [comparison_0017.png](renders/comparison_0017.png) |
+| 0024.png | 0.93449 | [comparison_0024.png](renders/comparison_0024.png) |
+| 0031.png | 0.92483 | [comparison_0031.png](renders/comparison_0031.png) |
+| 0038.png | 0.97323 | [comparison_0038.png](renders/comparison_0038.png) |
+| 0045.png | 0.89733 | [comparison_0045.png](renders/comparison_0045.png) |
+| 0052.png | 0.92003 | [comparison_0052.png](renders/comparison_0052.png) |
+| 0059.png | 0.94947 | [comparison_0059.png](renders/comparison_0059.png) |
+| 0066.png | 0.87661 | [comparison_0066.png](renders/comparison_0066.png) |
+| 0073.png | 0.87704 | [comparison_0073.png](renders/comparison_0073.png) |
+| 0080.png | 0.88130 | [comparison_0080.png](renders/comparison_0080.png) |
+| 0087.png | 0.87266 | [comparison_0087.png](renders/comparison_0087.png) |
+| 0094.png | 0.82466 | [comparison_0094.png](renders/comparison_0094.png) |

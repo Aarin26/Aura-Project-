@@ -26,8 +26,7 @@
 ## Quality Inspection Checklist
 
 - [x] Asset opens without missing geometry, shader errors, or pink texture fallbacks.
-- [x] Metric scale matches real-world dimensions (35.5 cm x 21.4 cm x 14.5 cm).
-- [x] Pivot point rests at bottom-center ($Y=0$).
-- [x] Face normals oriented outward; zero z-fighting or inverted geometry.
-- [x] Total polygon budget: **180 triangles** (Mobile / AR / PC real-time ready).
-- **Sign-Off:** **PASS - Qualified for Game Engine Deployment**
+- Measured dimensions: 14.4 cm x 27.9 cm x 13.9 cm.
+- Measured polygon count: 102148 triangles; review against the target platform budget.
+- Grounding check: Y_min = 0.000000 m.
+- Import completed by Trimesh reload; inspect material appearance and normals in the target engine.

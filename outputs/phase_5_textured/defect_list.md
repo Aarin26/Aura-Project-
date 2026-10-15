@@ -1,5 +1,7 @@
 # Known Defect List - Phase 5 Candidate Asset
 
+> **Superseded for the current deliverable.** This list describes an older Phase 5 candidate and is not evidence about the regenerated export. See `outputs/phase_7_export/reconstruction_report.md` for the current build and its limitations.
+
 - **Evaluation Date:** 2026-10-14T22:48:25.642572
 - **Candidate Asset:** `mesh_textured.obj`
 - **Status:** Ready for Phase 6 Held-Out Validation
